@@ -1,16 +1,48 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "my_functions.h"
 
-// Funktsiya dlya vychisleniya vozrasta
-int calculate_age(int birth_year, int birth_month, int birth_day) {
-    // Poluchayem tekushchuyu datu
-    time_t t = time(NULL);
+// Реализация функции для ввода строки
+int readln(char s[], int maxlen) {
+    if (fgets(s, maxlen, stdin) == NULL) {
+        return -1;  // Ошибка при считывании
+    }
+    // Убираем символ новой строки
+    s[strcspn(s, "\n")] = 0;
+    return 0;
+}
+
+// Реализация функции для вывода числа в двоичном формате
+void printBinary(unsigned char port) {
+    for (int i = 7; i >= 0; i--) {
+        printf("%d", (port >> i) & 1);  // Сдвигаем биты и выводим
+    }
+    printf("\n");
+}
+
+// Реализация функции для выполнения арифметических сдвигов
+void run_shift_arifmetic() {
+    int value = 10;  // Пример числа
+    int shift_amount = 2;  // Количество сдвигов
+
+    // Сдвиг влево (умножение на 2^shift_amount)
+    int result_left_shift = value << shift_amount;
+    printf("Left shift: %d << %d = %d\n", value, shift_amount, result_left_shift);
+
+    // Сдвиг вправо (деление на 2^shift_amount)
+    int result_right_shift = value >> shift_amount;
+    printf("Right shift: %d >> %d = %d\n", value, shift_amount, result_right_shift);
+}
+
+// Реализация функции для вычисления возраста по дате рождения
+int calculate_age(int birth_day, int birth_month, int birth_year) {
+    time_t t = time(NULL);  // Текущий момент времени
     struct tm current_time = *localtime(&t);
 
     int age = current_time.tm_year + 1900 - birth_year;
 
-    // Esli eshche ne nastupil den' rozhdeniya v etom godu, umenshayem vozrast na 1
+    // Если день рождения еще не наступил в этом году
     if (current_time.tm_mon + 1 < birth_month ||
         (current_time.tm_mon + 1 == birth_month && current_time.tm_mday < birth_day)) {
         age--;
@@ -19,46 +51,7 @@ int calculate_age(int birth_year, int birth_month, int birth_day) {
     return age;
 }
 
-int main() {
-    char first_name[50], last_name[50];
-    int birth_day, birth_month, birth_year;
-
-    // Zapros imeni, familii i daty rozhdeniya
-    printf("Enter your first name: ");
-    if (scanf("%49s", first_name) != 1) {
-        printf("Invalid input for first name.\n");
-        return 1;
-    }
-
-    printf("Enter your last name: ");
-    if (scanf("%49s", last_name) != 1) {
-        printf("Invalid input for last name.\n");
-        return 1;
-    }
-
-    printf("Enter your birth day (DD): ");
-    if (scanf("%d", &birth_day) != 1 || birth_day < 1 || birth_day > 31) {
-        printf("Invalid input for birth day.\n");
-        return 1;
-    }
-
-    printf("Enter your birth month (MM): ");
-    if (scanf("%d", &birth_month) != 1 || birth_month < 1 || birth_month > 12) {
-        printf("Invalid input for birth month.\n");
-        return 1;
-    }
-
-    printf("Enter your birth year (YYYY): ");
-    if (scanf("%d", &birth_year) != 1 || birth_year < 1900 || birth_year > 2100) {
-        printf("Invalid input for birth year.\n");
-        return 1;
-    }
-
-    // Vychislenie vozrasta
-    int age = calculate_age(birth_year, birth_month, birth_day);
-
-    // Vyvod previatstviya
-    printf("\nHello, %s %s! You are %d years old.\n", first_name, last_name, age);
-
-    return 0;
+// Реализация функции для вычисления мощности (P = U * I)
+double calculate_power(double voltage, double current) {
+    return voltage * current;  // Простое произведение напряжения на ток
 }
